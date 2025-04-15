@@ -1,6 +1,53 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { ChannelType, PermissionsBitField } from 'discord.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
+  name: 'guildMemberAdd',
+  async execute(member) {
+    const username = member.user.username;
+    const userId = member.id;
+    const guild = member.guild;
+
+    const bienvenidaChannel = guild.channels.cache.get(process.env.CANAL_BIENVENIDA_ID);
+    const dbPath = process.env.USUARIOS_DATA_PATH;
+
+    if (!fs.existsSync(dbPath)) {
+      return bienvenidaChannel?.send(`⚠️ No se encontró la base de datos de usuarios.`);
+    }
+
+    const usersData = JSON.parse(fs.readFileSync(dbPath));
+    const usuario = usersData.find(u => u.username === username);
+
+    if (usuario) {
+      const canalNombre = usuario.grupo; // por ejemplo: "grupo_1"
+      const canal = guild.channels.cache.find(c => c.name === canalNombre && c.type === ChannelType.GuildText);
+
+      if (canal) {
+        await canal.permissionOverwrites.edit(userId, {
+          ViewChannel: true,
+          SendMessages: true
+        });
+
+        bienvenidaChannel?.send(`🎉 ¡Bienvenido **${username}**! Ya tenés acceso al canal **#${canal.name}**.`);
+      } else {
+        bienvenidaChannel?.send(`👋 Bienvenido **${username}**, pero no se encontró el canal correspondiente a tu grupo.`);
+      }
+    } else {
+      const register = process.env.REGISTER_URL;
+      bienvenidaChannel?.send(`👋 ¡Bienvenido **${username}**! No estás registrado aún. Por favor registrate correctamente en ${register} para que se te asignen los permisos.`);
+    }
+  }
+};
+
+
+/*import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { register } from 'module';
 
@@ -68,4 +115,4 @@ export default {
       canalBienvenida.send(mensajeBienvenida).catch(console.error);
     }
   }
-};
+};*/
