@@ -68,7 +68,7 @@ async function verificarUsuario(member) {
 client.on('guildMemberAdd', async member => {
   const welcomeChannel = member.guild.channels.cache.get(process.env.CANAL_BIENVENIDA_ID);
 
-  if (welcomeChannel) {
+if (welcomeChannel) {
     welcomeChannel.send(`¡Bienvenido ${member.user.username} al servidor! 🎉\nUsa \`/ayuda\` para comenzar.`);
   }
 

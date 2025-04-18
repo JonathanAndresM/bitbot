@@ -54,6 +54,10 @@ CANAL_BIENVENIDA_ID=id_del_canal_de_bienvenida
 
 3. Ejecuta el bot:
 
+node utils/clearCommands.js
+
+node utils/registerCommands.js
+
 node index.js
 
 ## Si todo está correcto, verás en la consola:

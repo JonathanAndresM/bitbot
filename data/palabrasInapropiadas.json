@@ -1,0 +1,44 @@
+{
+  "palabras": [
+    {
+      "palabra": "idiota",
+      "contexto": "cuando se usa en un contexto ficticio o como chiste entre amigos"
+    },
+    {
+      "palabra": "imbécil",
+      "contexto": "cuando se refiere a un personaje ficticio"
+    },
+    {
+      "palabra": "tonto",
+      "contexto": "cuando se usa de manera cariñosa"
+    },
+    {
+      "palabra": "estúpido",
+      "contexto": "cuando se refiere a una situación absurda y no a una persona"
+    },
+    {
+      "palabra": "mierda",
+      "contexto": "cuando se refiere a un accidente o situación desagradable sin insultar a nadie"
+    },
+    {
+      "palabra": "maldito",
+      "contexto": "cuando se refiere a una maldición o personaje ficticio"
+    },
+    {
+      "palabra": "demonio",
+      "contexto": "cuando se refiere a un ser mitológico o personaje"
+    },
+    {
+      "palabra": "asco",
+      "contexto": "cuando se refiere a una comida o situación"
+    },
+    {
+      "palabra": "vete al demonio",
+      "contexto": null
+    },
+    {
+      "palabra": "puta",
+      "contexto": "cuando se refiere a una obra literaria o artística (por ejemplo, 'La puta respetuosa')"
+    }
+  ]
+}
