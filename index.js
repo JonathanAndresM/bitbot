@@ -1,6 +1,75 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+const { Client, Collection, GatewayIntentBits, Events } = require('discord.js');
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
+
+client.commands = new Collection();
+
+// Función para cargar comandos desde subcarpetas
+function loadCommandsRecursively(dir) {
+  const files = fs.readdirSync(dir);
+
+  for (const file of files) {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+console.log(`Cargando: ${fullPath}`);
+
+    if (stat.isDirectory()) {
+      loadCommandsRecursively(fullPath);
+    } else if (file.endsWith('.js')) {
+      const command = require(fullPath);
+      if (command.data && command.execute) {
+        client.commands.set(command.data.name, command);
+        console.log(`✅ Comando cargado: ${command.data.name}`);
+      } else {
+        console.warn(`⚠️ El archivo ${file} no tiene las propiedades necesarias.`);
+      }
+    }
+  }
+}
+
+// Cargar todos los comandos desde "commands" y sus subcarpetas
+loadCommandsRecursively(path.join(__dirname, 'commands'));
+
+// 📥 Manejo de comandos tipo slash
+client.on(Events.InteractionCreate, async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  const command = client.commands.get(interaction.commandName);
+
+  if (!command) return;
+
+  try {
+    await command.execute(interaction);
+  } catch (error) {
+    console.error('❌ Error al ejecutar el comando:', error);
+    await interaction.reply({
+      content: 'Ocurrió un error al ejecutar el comando.',
+      ephemeral: true,
+    });
+  }
+});
+
+// 🚀 Login
+client.once(Events.ClientReady, () => {
+  console.log(`✅ Bot iniciado como ${client.user.tag}`);
+});
+
+client.login(process.env.TOKEN);
+
+
+/*require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 const {
   Client,
   GatewayIntentBits,
@@ -298,4 +367,4 @@ client.on('messageCreate', message => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN);*/
